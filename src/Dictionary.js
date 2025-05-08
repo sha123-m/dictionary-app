@@ -1,32 +1,44 @@
 import React, { useState } from "react";
 import axios from "axios";
+import Results from "./Results";
 import "./Dictionary.css"
 
-export default function Dictionary(){
+export default function Dictionary() {
     const [keyword, setKeyword] = useState("");
-
-    function handleResponse(response){
-        console.log(response.data[0]);
+    const [results, setResults] = useState(null);
+  
+    function handleResponse(response) {
+      console.log(response.data[0]);
+      setResults(response.data[0]);
     }
-
-    
+  
+    function handleKeywordChange(event) {
+      setKeyword(event.target.value);
+    }
+  
     function search(event) {
-        event.preventDefault();
-        const apiUrl = `https://api.dictionaryapi.dev/api/v2/entries/en/${keyword}`;
-        axios.get(apiUrl).then(handleResponse).catch((error) => {
-          console.error("API error:", error.response?.status, error.response?.data);
-        });
+      event.preventDefault();
+  
+      if (!keyword.trim()) {
+        alert("Please enter a word.");
+        return;
       }
-    function handleKeywordChange(event){
-        setKeyword(event.target.value);
+  
+      const apiUrl = `https://api.dictionaryapi.dev/api/v2/entries/en/${keyword}`;
+      axios.get(apiUrl)
+        .then(handleResponse)
+        .catch((error) => {
+          console.error("API Error:", error.response?.status);
+          alert("Word not found. Please try another.");
+        });
     }
+  
     return (
-        <div className="Dictionary">
-            <form onSubmit={search}>
-                <input type="search" 
-                onChange = {handleKeywordChange}/>
-            </form>
-        </div>
-
+      <div className="Dictionary">
+        <form onSubmit={search}>
+          <input type="search" onChange={handleKeywordChange} />
+        </form>
+        <Results results={results} />
+      </div>
     );
-}
+  }
