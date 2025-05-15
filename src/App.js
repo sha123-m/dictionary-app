@@ -9,7 +9,7 @@ function App() {
       <main>
         <Dictionary/>
       </main>
-      <footer className="App-footer">coded by sha123-m</footer>
+      <footer className="App-footer">coded by sharon</footer>
     </div>
     </div>
   );
